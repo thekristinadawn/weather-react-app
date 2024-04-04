@@ -26,7 +26,15 @@ function App() {
             >
               open-sourced on GitHub
             </a>{" "}
-            and hosted on Netlify
+            hosted on
+            <a
+              href="https://forecasted-react-weather.netlify.app/"
+              target="_blank"
+              rel="noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              Netlify
+            </a>{" "}
           </footer>
         </div>
       </div>
