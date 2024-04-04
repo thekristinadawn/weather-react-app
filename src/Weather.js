@@ -1,36 +1,41 @@
 import React, { useState, useEffect } from "react";
 import ReactAnimatedWeather from "react-animated-weather";
 
-function Weather({ defaultCity }) {
+function Weather() {
+  const [city, setCity] = useState("New York"); // Default city
+  const [query, setQuery] = useState("");
   const [weatherData, setWeatherData] = useState(null);
-  const [forecastData, setForecastData] = useState(null); // Define forecastData in state
+  const [forecastData, setForecastData] = useState(null);
   const apiKey = "f8e6a9e3d6fde87cb38868da460b1371";
   const units = "imperial";
 
   useEffect(() => {
     const fetchWeatherAndForecast = async () => {
       try {
-        // Fetch current weather to get city coordinates
-        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity}&appid=${apiKey}&units=${units}`;
+        // Fetch weather data
+        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
         const weatherResponse = await fetch(weatherUrl);
-        const weatherData = await weatherResponse.json();
-        setWeatherData(weatherData);
+        const weather = await weatherResponse.json();
+        setWeatherData(weather);
 
-        // Use coordinates to fetch forecast data using One Call API
-        const forecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&exclude=current,minutely,hourly,alerts&appid=${apiKey}&units=${units}`;
+        // Fetch forecast data using coordinates
+        const forecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${weather.coord.lat}&lon=${weather.coord.lon}&exclude=current,minutely,hourly,alerts&appid=${apiKey}&units=${units}`;
         const forecastResponse = await fetch(forecastUrl);
-        const forecastData = await forecastResponse.json();
-        setForecastData(forecastData.daily); // Assume you want daily forecast data
+        const forecast = await forecastResponse.json();
+        setForecastData(forecast.daily.slice(1, 6));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchWeatherAndForecast();
-  }, [defaultCity]);
+    if (city) {
+      fetchWeatherAndForecast();
+    }
+  }, [city]);
 
-  // Map OpenWeatherMap icons to ReactAnimatedWeather icons
   const mapIcon = (iconCode) => {
+    // Map OpenWeatherMap icons to ReactAnimatedWeather icons
+    // Add or modify the mappings as needed
     const iconMap = {
       "01d": "CLEAR_DAY",
       "01n": "CLEAR_NIGHT",
@@ -51,48 +56,67 @@ function Weather({ defaultCity }) {
       "50d": "FOG",
       "50n": "FOG",
     };
-    return iconMap[iconCode] || "CLEAR_DAY"; // Default to 'CLEAR_DAY' if no match is found
+    return iconMap[iconCode] || "CLEAR_DAY";
   };
 
-  if (!weatherData || !forecastData) return <div>Loading...</div>;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (query) {
+      setCity(query);
+      setQuery("");
+    }
+  };
 
   return (
-    <div>
-      <h2>Current Weather in {weatherData.name}</h2>
-      <ReactAnimatedWeather
-        icon={mapIcon(weatherData.weather[0].icon)}
-        color="goldenrod"
-        size={64}
-        animate={true}
-      />
-      <p>Temperature: {Math.round(weatherData.main.temp)}°F</p>
-      <p>Description: {weatherData.weather[0].description}</p>
-      <p>Humidity: {weatherData.main.humidity}%</p>
-      <p>Wind: {weatherData.wind.speed}km/h</p>
-      <div>
-        <h2>Weekly Forecast</h2>
-        {forecastData.map((day, index) => {
-          // Convert the timestamp to a Date object
-          const date = new Date(day.dt * 1000);
-          // Format the date as "Day of the Week, Month Day"
-          const options = { weekday: "long", month: "short", day: "numeric" };
-          const dateString = date.toLocaleDateString("en-US", options);
-
-          return (
-            <div key={index} style={{ marginBottom: "10px" }}>
+    <div className="weather-app">
+      <form onSubmit={handleSubmit} className="search-form">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="Enter a city..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button type="submit" className="search-button">
+          Submit
+        </button>
+      </form>
+      {weatherData && (
+        <div className="current-weather">
+          <ReactAnimatedWeather
+            icon={mapIcon(weatherData.weather[0].icon)}
+            color="goldenrod"
+            size={64}
+            animate={true}
+          />
+          <h2>{weatherData.name}</h2>
+          <h3>{Math.round(weatherData.main.temp)}°F</h3>
+          <p>{weatherData.weather[0].description}</p>
+          <p>
+            Humidity: {weatherData.main.humidity}% | Wind:{" "}
+            {weatherData.wind.speed} km/h
+          </p>
+        </div>
+      )}
+      <div className="weekly-forecast">
+        {forecastData &&
+          forecastData.map((day, index) => (
+            <div key={index} className="forecast-item">
               <p>
-                {dateString}: {Math.round(day.temp.day)}°F -{" "}
-                {day.weather[0].description}
-                <ReactAnimatedWeather
-                  icon={mapIcon(day.weather[0].icon)}
-                  color="goldenrod"
-                  size={64}
-                  animate={true}
-                />
+                {new Date(day.dt * 1000).toLocaleDateString("en-US", {
+                  weekday: "short",
+                })}
               </p>
+              <ReactAnimatedWeather
+                icon={mapIcon(day.weather[0].icon)}
+                color="goldenrod"
+                size={48}
+                animate={true}
+              />
+              <p>{Math.round(day.temp.day)}°F</p>
+              <p>{day.weather[0].description}</p>
             </div>
-          );
-        })}
+          ))}
       </div>
     </div>
   );
