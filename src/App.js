@@ -17,14 +17,14 @@ function App() {
             >
               Kristina Dawn
             </a>{" "}
-            and is{" "}
+            and is open-sourced on{" "}
             <a
               href="https://github.com/thekristinadawn/weather-react-app"
               target="_blank"
               rel="noreferrer"
               style={{ textDecoration: "none" }}
             >
-              open-sourced on GitHub
+              GitHub
             </a>{" "}
             hosted on
             <a
