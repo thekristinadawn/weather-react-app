@@ -4,14 +4,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import dayBackground from "./images/day.jpg";
 import nightBackground from "./images/night.jpg";
 
+let apiKey = "f8e6a9e3d6fde87cb38868da460b1371";
+let units = "imperial";
+
 function Weather() {
   let [city, setCity] = useState("Miami");
   let [query, setQuery] = useState("");
   let [weatherData, setWeatherData] = useState(null);
   let [forecastData, setForecastData] = useState(null);
   let [isDayTime, setIsDayTime] = useState(true);
-  let apiKey = "f8e6a9e3d6fde87cb38868da460b1371";
-  let units = "imperial";
 
   useEffect(() => {
     const fetchWeatherAndForecast = async () => {
