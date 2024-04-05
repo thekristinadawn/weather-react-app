@@ -2,26 +2,24 @@ import React, { useState, useEffect } from "react";
 import ReactAnimatedWeather from "react-animated-weather";
 
 function Weather() {
-  const [city, setCity] = useState("New York"); // Default city
-  const [query, setQuery] = useState("");
-  const [weatherData, setWeatherData] = useState(null);
-  const [forecastData, setForecastData] = useState(null);
-  const apiKey = "f8e6a9e3d6fde87cb38868da460b1371";
-  const units = "imperial";
+  let [city, setCity] = useState("Miami");
+  let [query, setQuery] = useState("");
+  let [weatherData, setWeatherData] = useState(null);
+  let [forecastData, setForecastData] = useState(null);
+  let apiKey = "f8e6a9e3d6fde87cb38868da460b1371";
+  let units = "metric";
 
   useEffect(() => {
-    const fetchWeatherAndForecast = async () => {
+    let fetchWeatherAndForecast = async () => {
       try {
-        // Fetch weather data
-        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
-        const weatherResponse = await fetch(weatherUrl);
-        const weather = await weatherResponse.json();
+        let weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
+        let weatherResponse = await fetch(weatherUrl);
+        let weather = await weatherResponse.json();
         setWeatherData(weather);
 
-        // Fetch forecast data using coordinates
-        const forecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${weather.coord.lat}&lon=${weather.coord.lon}&exclude=current,minutely,hourly,alerts&appid=${apiKey}&units=${units}`;
-        const forecastResponse = await fetch(forecastUrl);
-        const forecast = await forecastResponse.json();
+        let forecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${weather.coord.lat}&lon=${weather.coord.lon}&exclude=current,minutely,hourly,alerts&appid=${apiKey}&units=${units}`;
+        let forecastResponse = await fetch(forecastUrl);
+        let forecast = await forecastResponse.json();
         setForecastData(forecast.daily.slice(1, 6));
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -33,10 +31,8 @@ function Weather() {
     }
   }, [city]);
 
-  const mapIcon = (iconCode) => {
-    // Map OpenWeatherMap icons to ReactAnimatedWeather icons
-    // Add or modify the mappings as needed
-    const iconMap = {
+  let mapIcon = (iconCode) => {
+    let iconMap = {
       "01d": "CLEAR_DAY",
       "01n": "CLEAR_NIGHT",
       "02d": "PARTLY_CLOUDY_DAY",
@@ -59,13 +55,15 @@ function Weather() {
     return iconMap[iconCode] || "CLEAR_DAY";
   };
 
-  const handleSubmit = (e) => {
+  let handleSubmit = (e) => {
     e.preventDefault();
     if (query) {
       setCity(query);
       setQuery("");
     }
   };
+
+  let convertCtoF = (celsius) => Math.round((celsius * 9) / 5 + 32);
 
   return (
     <div className="weather-app">
@@ -90,7 +88,7 @@ function Weather() {
             animate={true}
           />
           <h2>{weatherData.name}</h2>
-          <h3>{Math.round(weatherData.main.temp)}°F</h3>
+          <h3>{convertCtoF(weatherData.main.temp)}°F</h3>
           <p>{weatherData.weather[0].description}</p>
           <p>
             Humidity: {weatherData.main.humidity}% | Wind:{" "}
@@ -113,7 +111,7 @@ function Weather() {
                 size={48}
                 animate={true}
               />
-              <p>{Math.round(day.temp.day)}°F</p>
+              <p>{convertCtoF(day.temp.day)}°F</p>
               <p>{day.weather[0].description}</p>
             </div>
           ))}

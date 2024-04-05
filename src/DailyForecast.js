@@ -1,14 +1,14 @@
 import React from "react";
 import ReactAnimatedWeather from "react-animated-weather";
 
-const Forecast = ({ daily }) => {
-  const iconDefaults = {
+let Forecast = ({ daily }) => {
+  let iconDefaults = {
     color: "goldenrod",
     size: 50,
     animate: true,
   };
 
-  const getDayOfWeek = (unixTimestamp) => {
+  let getDayOfWeek = (unixTimestamp) => {
     return new Date(unixTimestamp * 1000).toLocaleDateString("en-US", {
       weekday: "long",
     });

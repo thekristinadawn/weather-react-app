@@ -26,7 +26,7 @@ function App() {
             >
               GitHub
             </a>{" "}
-            hosted on
+            and hosted on{" "}
             <a
               href="https://forecasted-react-weather.netlify.app/"
               target="_blank"
