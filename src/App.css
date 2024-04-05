@@ -1,7 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&family=Open+Sans:wght@400;700&family=Oswald:wght@500&family=Roboto:wght@400;500&display=swap");
+
 .weather-app {
   font-family: Arial, sans-serif;
   text-align: center;
   padding: 20px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .search-form {
@@ -10,8 +15,9 @@
 
 .search-bar {
   padding: 10px;
-  width: 70%;
+
   margin-right: 10px;
+  color: white;
 }
 
 .search-button {
@@ -22,6 +28,30 @@
 
 .current-weather {
   margin: 20px 0;
+  color: white;
+}
+
+.weather-city {
+  font-family: "Montserrat", sans-serif;
+}
+
+.weather-temp {
+  font-family: "Open Sans", sans-serif;
+  font-size: 100px;
+}
+
+.weather-description {
+  font-family: "Lato", sans-serif;
+}
+
+.weather-details {
+  font-family: "Open Sans", sans-serif;
+}
+
+.imperial {
+  font-size: 44px;
+  display: inline;
+  vertical-align: super;
 }
 
 .weekly-forecast {
@@ -31,25 +61,29 @@
 }
 
 .forecast-item {
-  flex-basis: 120px;
+  flex-basis: calc(100% / 5 - 20px);
   margin: 10px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 10px;
+  background-color: white;
+  color: black;
+  text-align: center;
 }
 
 @media (max-width: 600px) {
+  .forecast-item {
+    flex-basis: 100%;
+  }
+
   .weekly-forecast {
     flex-direction: column;
     align-items: center;
   }
 
-  .search-bar {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
+  .search-bar,
   .search-button {
     width: 100%;
+    margin-bottom: 10px; /* Adjusted for both elements */
   }
 }
